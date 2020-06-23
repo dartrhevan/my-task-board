@@ -30,7 +30,7 @@ function checkNotAuthenticated(req, res, next) {
 
 function logout(req, res) {
     req.logOut();
-    res.status(200);
+    res.send('{}');
 }
 
 function findUser(req, resp) {
