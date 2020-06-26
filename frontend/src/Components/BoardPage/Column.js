@@ -59,16 +59,19 @@ class Column extends React.Component {
                      onDragStart={this.onDragStart} onDragLeave={this.onDragLeave}
                      onDragOver={this.props.onDragOver} onDragEnd={this.onDragEnd}
                      onDrop={this.onDrop}>
+
                     <span onClick={this.moveLeft} className='arrow' style={{float: "left"}}>&lt;</span>
                     <span className='arrow' onClick={this.delete}>&#10006;</span>
                     <span onClick={this.moveRight} className='arrow' style={{float: "right"}}>&gt;</span>
                     <h3><Field name='name' onEdit={this.edit}>{this.props.column.name}</Field></h3>
+
                     {this.props.column.tasks.filter(this.props.filter)
                         .filter(t => Object.keys(t).length !== 0).map(b =>
                         <Task columns={this.props.columns} members={this.props.members}
                               onEdit={this.editTask} columnId={this.props.column._id}
                               toggleDoneTask={this.props.WsClient.toggleDoneTask}
                               onDelete={this.deleteTask} key={b._id} id={b._id} task={b} />)}
+
                     <AddTask onSubmit={this.addTask} members={this.props.members}/>
                 </div>
         );

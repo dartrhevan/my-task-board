@@ -18,7 +18,7 @@ function getDetailedBoard(boardId, userId) {
             console.log(b);
             if(b[0].creatorId._id.toString() !== userId.toString() && b[0].members.find(m => m._id === userId) === -1)
                 return {"error": "Wrong boardId"};
-            const columns = await Column.find({ boardId: mongoose.Types.ObjectId(boardId)})//TODO: sort
+            const columns = await Column.find({ boardId: mongoose.Types.ObjectId(boardId)})
                     .populate('tasks', 'name _id workerId description done endDate')
                     .exec()
                     .then(c => Column.populate(c, {path: 'tasks.workerId', select: "login"}))
@@ -46,8 +46,9 @@ function detailedBoardWSHandler(ws, req) {
 
 function closeDetailedBoard(boardId, userId) {
     // remove ws
-    delete boardSockets[boardId][userId];
-    if(!Object.keys(boardSockets[boardId]).length)//if there is no users seeing this board, remove it from dictionary
+    if(boardSockets[boardId] && boardSockets[boardId][userId])
+        delete boardSockets[boardId][userId];
+    if(boardSockets[boardId] && !Object.keys(boardSockets[boardId]).length)//if there is no users seeing this board, remove it from dictionary
         delete boardSockets[boardId];
 }
 
@@ -64,7 +65,7 @@ function addNewObject(data , boardId) {
                 {useFindAndModify: false}, standardResend.bind(null, boardId)) : sendData(boardId))
         .catch(e => console.log(e));
 }
-
+/** Object may be Task or Column */
 function deleteObject(data , boardId) {
     mongoose.connection.models[data.collection]
         .findByIdAndRemove(data._id , {useFindAndModify: false} , (err , obj) => {

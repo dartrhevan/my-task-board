@@ -33,11 +33,13 @@ function logout(req, res) {
     res.send('{}');
 }
 
+const objectIdLength = 12;
+
 function findUser(req, resp) {
     const identifier = decodeURI(req.query.identifier);
-    const conditions = [{login: identifier },//TODO: cast to ObjectId
+    const conditions = [{login: identifier },
         {email: identifier }];
-    if(identifier.length === 12)
+    if(identifier.length === objectIdLength)
         conditions.push({_id:  identifier});
     console.log(identifier);
 
